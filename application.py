@@ -2,7 +2,8 @@ import pickle
 import numpy as np
 from flask import Flask, render_template, request
 
-app = Flask(__name__)
+application = Flask(__name__)
+app= application
 
 # Load scaler and model
 scaler = pickle.load(open("models/scaler.pkl", "rb"))
