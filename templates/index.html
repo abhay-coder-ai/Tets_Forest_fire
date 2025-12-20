@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Forest Fire Risk Prediction</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .app-container {
+            width: 900px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            overflow: hidden;
+        }
+
+        /* LEFT SIDE */
+        .left-panel {
+            padding: 40px;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 13px;
+            color: #374151;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        input, select {
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            font-size: 14px;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        button {
+            margin-top: 25px;
+            padding: 12px;
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #1e40af;
+        }
+
+        /* RIGHT SIDE */
+        .right-panel {
+            background: #111827;
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .result-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #9ca3af;
+            margin-bottom: 10px;
+        }
+
+        .result-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #22c55e;
+        }
+
+        .result-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .placeholder {
+            font-size: 14px;
+            color: #9ca3af;
+            text-align: center;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #9ca3af;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app-container">
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+        <div class="title">Forest Fire Risk Prediction</div>
+        <div class="subtitle">
+            Machine Learning model (Ridge Regression) for predicting Fire Weather Index (FWI)
+        </div>
+
+        <form method="POST">
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Temperature</label>
+                    <input type="number" step="any" name="Temperature" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Relative Humidity (RH)</label>
+                    <input type="number" step="any" name="RH" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Wind Speed (Ws)</label>
+                    <input type="number" step="any" name="Ws" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Rain</label>
+                    <input type="number" step="any" name="Rain" required>
+                </div>
+
+                <div class="form-group">
+                    <label>FFMC</label>
+                    <input type="number" step="any" name="FFMC" required>
+                </div>
+
+                <div class="form-group">
+                    <label>DMC</label>
+                    <input type="number" step="any" name="DMC" required>
+                </div>
+
+                <div class="form-group">
+                    <label>ISI</label>
+                    <input type="number" step="any" name="ISI" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Fire Class</label>
+                    <select name="Classes">
+                        <option value="0">No Fire</option>
+                        <option value="1">Fire</option>
+                    </select>
+                </div>
+
+                <div class="form-group full-width">
+                    <button type="submit">Run Prediction</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+        {% if prediction is not none %}
+            <div class="result-box">
+                <div class="result-title">Predicted Fire Weather Index</div>
+                <div class="result-value">{{ prediction }}</div>
+            </div>
+        {% else %}
+            <div class="placeholder">
+                Enter input parameters<br>
+                and run prediction to see results
+            </div>
+        {% endif %}
+
+        <div class="footer">
+            Deployed ML Model • Flask • Scikit-learn
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
