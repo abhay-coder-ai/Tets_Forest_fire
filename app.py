@@ -1,14 +1,27 @@
+import os
 import pickle
 import numpy as np
+import pandas as pd
 from flask import Flask, render_template, request
 
+# Flask app
 application = Flask(__name__)
-app= application
+app = application
 
-# Load scaler and model
-scaler = pickle.load(open("models/scaler.pkl", "rb"))
-model = pickle.load(open("models/ridge.pkl", "rb"))
+# -------------------------------
+# Load scaler and model safely
+# -------------------------------
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+scaler_path = os.path.join(BASE_DIR, "models", "scaler.pkl")
+model_path = os.path.join(BASE_DIR, "models", "ridge.pkl")
+
+scaler = pickle.load(open(scaler_path, "rb"))
+model = pickle.load(open(model_path, "rb"))
+
+# -------------------------------
+# Routes
+# -------------------------------
 @app.route("/", methods=["GET", "POST"])
 def predict():
     prediction = None
@@ -23,14 +36,19 @@ def predict():
         ISI = float(request.form["ISI"])
         Classes = float(request.form["Classes"])
 
-        # SAME order as scaler.feature_names_in_
-        input_data = np.array([[Temperature, RH, Ws, Rain,
-                                FFMC, DMC, ISI, Classes]])
+        # Create DataFrame with feature names (NO WARNING)
+        input_data = pd.DataFrame(
+            [[Temperature, RH, Ws, Rain, FFMC, DMC, ISI, Classes]],
+            columns=scaler.feature_names_in_
+        )
 
         scaled_data = scaler.transform(input_data)
         prediction = model.predict(scaled_data)[0]
 
     return render_template("index.html", prediction=prediction)
 
+# -------------------------------
+# Main
+# -------------------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
